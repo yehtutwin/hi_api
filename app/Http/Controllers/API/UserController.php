@@ -124,7 +124,7 @@ class UserController extends Controller
             $validator = Validator::make($request->all(), [
                 'name' => 'required|min:5|max:50',
                 'email' => 'required|email',
-                'password' => 'required|confirmed|min:8',
+                'password' => 'nullable|confirmed|min:8',
             ]);
 
             if ($validator->fails()) {
@@ -137,7 +137,9 @@ class UserController extends Controller
     
             $user->name = $request->name;
             $user->email = $request->email;
-            $user->password = bcrypt($request->password);
+            if($request->password) {
+                $user->password = bcrypt($request->password);
+            }
             $user->save();
     
             $res->status = 1;
