@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\Service;
 use Validator;
+use DB;
 
 class BookingController extends Controller
 {
@@ -41,6 +42,7 @@ class BookingController extends Controller
     public function store(Request $request)
     {
         $res = new \stdClass();
+        DB::beginTransaction();
         try {
 
             $validator = Validator::make($request->all(), [
@@ -79,6 +81,7 @@ class BookingController extends Controller
             $res->message = 'Created Successfully!';
             $res->data = $request->all();
 
+            DB::commit();
             return response()->json($res, 200);
 
         } catch (\Exception $e) {
@@ -86,6 +89,7 @@ class BookingController extends Controller
             $res->message = 'Exception Error!';
             $res->developer_message = $e->getMessage();
 
+            DB::rollback();
             return response()->json($res, 400);
         }
     } 
@@ -132,6 +136,7 @@ class BookingController extends Controller
     public function update(Request $request, Booking $booking)
     {
         $res = new \stdClass();
+        DB::beginTransaction();
         try {
 
             $validator = Validator::make($request->all(), [
@@ -170,6 +175,7 @@ class BookingController extends Controller
             $res->message = 'Updated Successfully!';
             $res->data = $request->all();
 
+            DB::commit();
             return response()->json($res, 200);
 
         } catch (\Exception $e) {
@@ -177,6 +183,7 @@ class BookingController extends Controller
             $res->message = 'Exception Error!';
             $res->developer_message = $e->getMessage();
 
+            DB::rollback();
             return response()->json($res, 400);
         }
     }
