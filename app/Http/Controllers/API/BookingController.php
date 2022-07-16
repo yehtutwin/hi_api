@@ -68,7 +68,7 @@ class BookingController extends Controller
             ]);
 
             $services = $request->services;
-            foreach($services as $service) {
+            foreach($services as $service_id) {
                 $service = Service::find($service_id);
                 if($service) {
                     $booking->services()->attach($service);
